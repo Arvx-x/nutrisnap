@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       });
     }
 
-    const context = `Meal Profile\n---\nName: ${meal.name}\nCalories: ${meal.calories}\nProtein: ${meal.protein}\nCarbs: ${meal.carbs}\nFat: ${meal.fat}\nSummary: ${meal.summary}\nDescription: ${meal.description}\n\nTask: You are a culinary nutrition assistant. Use the Meal Profile as ground truth.\n- Explain nutrition in plain language (macros, calories, balance).\n- Provide a concise ingredient list (best-guess) and a simple recipe with steps.\n- Offer healthy substitutions/alternatives (dietary needs, budget).\n- If user asks to modify meal, give specific adjustments and updated macros qualitatively.\n- Keep responses compact, scannable, and actionable.\n`;
+    const context = `Meal Profile\n---\nName: ${meal.name}\nCalories: ${meal.calories}\nProtein: ${meal.protein}\nCarbs: ${meal.carbs}\nFat: ${meal.fat}\nSummary: ${meal.summary}\nDescription: ${meal.description}\n\nTask: You are a culinary nutrition assistant. Use the Meal Profile as ground truth.\n- Explain nutrition in plain language (macros, calories, balance).\n- Provide a concise ingredient list (best-guess) and a simple recipe with steps.\n- Offer healthy substitutions/alternatives (dietary needs, budget).\n- If user asks to modify meal, give specific adjustments and updated macros qualitatively.\n- Keep responses compact, scannable, and actionable.\n- VERY IMPORTANT: Be ~40–50% shorter than a typical answer. Prefer 5–6 short bullet lines.\n- Avoid repetition; keep each bullet under ~14 words.\n`;
 
     const prompt = `${context}\nUser Question: ${question}`;
 
@@ -45,6 +45,27 @@ export async function POST(req: Request) {
       return result.response.text();
     }
 
+    function shorten(text: string): string {
+      try {
+        // Normalize whitespace
+        let t = text.replace(/\s+$/g, "").replace(/\s{2,}/g, " ");
+        // If bullet/line-based, keep first 6 non-empty lines
+        const lines = t.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+        if (lines.length >= 2) {
+          t = lines.slice(0, 6).join("\n");
+        } else {
+          // Otherwise keep first 3 sentences
+          const parts = t.split(/(?<=[.!?])\s+/).slice(0, 3);
+          t = parts.join(" ");
+        }
+        // Hard cap to ~700 chars to enforce brevity
+        if (t.length > 700) t = t.slice(0, 700).trimEnd() + "…";
+        return t;
+      } catch {
+        return text;
+      }
+    }
+
     let answer: string;
     try {
       const keyToUse = primaryKey || backupKey!;
@@ -58,7 +79,8 @@ export async function POST(req: Request) {
       }
     }
 
-    return new Response(JSON.stringify({ answer }), {
+    const shortened = shorten(String(answer || ""));
+    return new Response(JSON.stringify({ answer: shortened }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
