@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Rubik } from "next/font/google";
 import "./globals.css";
-import BottomNav from "@/components/BottomNav";
+import BottomNavGate from "@/components/BottomNavGate";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -29,7 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} ${rubik.variable} antialiased bg-[var(--background)] text-[var(--foreground)]`}>
         <div className="min-h-svh pb-20">{children}</div>
-        <BottomNav />
+        <BottomNavGate />
       </body>
     </html>
   );

@@ -1,8 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { use } from "react";
 import { meals } from "@/data/meals";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import AskAI from "@/components/AskAI";
 
 export async function generateStaticParams() {
   return meals.map((m) => ({ id: m.id }));
@@ -15,6 +17,16 @@ export default function MealDetailsPage({ params }: { params: Promise<{ id: stri
 
   return (
     <main className="px-5 pt-6 pb-6 max-w-md mx-auto">
+      <div className="flex items-center justify-between">
+        <Link
+          href="/meals"
+          className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-extrabold uppercase tracking-wide bg-white border-2 border-black shadow-[3px_3px_0_0_#111]"
+          aria-label="Back to Top Meals"
+        >
+          ← Back
+        </Link>
+        <span className="text-xs text-black/60">Details</span>
+      </div>
       <div className="relative h-56 w-full overflow-hidden rounded-2xl bg-[var(--peach)]/40 shadow-soft">
         <Image
           src={meal.image}
@@ -72,6 +84,9 @@ export default function MealDetailsPage({ params }: { params: Promise<{ id: stri
           </ul>
         </CardContent>
       </Card>
+
+      {/* Ask AI inside meal card on tap; placed at bottom of details */}
+      <AskAI meal={meal} />
     </main>
   );
 }
