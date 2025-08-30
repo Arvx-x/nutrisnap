@@ -10,7 +10,7 @@ export default function ProfilePage() {
 
       <Card className="mt-5">
         <CardHeader>
-          <CardTitle>Abhishek B.</CardTitle>
+          <CardTitle>Aarav B.</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-3 gap-3 text-center">

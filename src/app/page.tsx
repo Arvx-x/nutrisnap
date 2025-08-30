@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import UploadAnalyzer from "@/components/UploadAnalyzer";
 import { meals } from "@/data/meals";
 import SafeImage from "@/components/SafeImage";
@@ -21,9 +22,16 @@ export default function Home() {
             <span className="text-xs font-extrabold uppercase tracking-wide">Eat Smart</span>
             <span className="text-xs">✨</span>
           </div>
-          <h1 className="mt-3 text-3xl font-extrabold tracking-tighter font-display">
+          <h1 className="mt-3 text-3xl font-extrabold tracking-tighter font-display inline-flex items-center gap-2 whitespace-nowrap">
             <span className="inline-block bg-[var(--peach)] px-2 pb-1 rounded-md border-2 border-black shadow-[4px_4px_0_0_#111]">Nutri</span>
             <span className="ml-1 inline-block bg-[var(--sage)] px-2 pb-1 rounded-md border-2 border-black shadow-[4px_4px_0_0_#111]">Scan</span>
+            <Image
+              src="/WhatsApp Image 2025-08-30 at 14.59.47.jpeg"
+              alt="NutriScan badge"
+              width={95}
+              height={95}
+              className="ml-4 align-middle rounded-2xl border-2 border-black shadow-[3px_3px_0_0_#111]"
+            />
           </h1>
           <p className="mt-2 text-sm text-black/75">Your playful AI guide to smarter meals, insights, and goals.</p>
 

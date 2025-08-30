@@ -20,7 +20,7 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-2 left-2 right-2 z-50 rounded-2xl bg-white supports-[backdrop-filter]:bg-white/90 accent-comic">
+    <nav className="fixed bottom-2 left-2 right-2 z-50 rounded-2xl bg-white accent-comic-dual">
       <ul className="mx-auto max-w-md grid grid-cols-4 gap-1 p-2">
         {tabs.map((tab) => {
           const isActive = pathname === tab.href || (tab.href !== "/" && pathname.startsWith(tab.href));

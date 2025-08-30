@@ -51,3 +51,8 @@ html {
   border-radius: 9999px;
   box-shadow: 3px 3px 0 0 #111111;
 }
+
+.accent-comic-dual {
+  border: 2px solid #111111;
+  box-shadow: 6px 6px 0 0 #111111, -6px 6px 0 0 #111111;
+}
