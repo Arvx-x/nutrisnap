@@ -1,3 +1,4 @@
+import Link from "next/link";
 import MealCard from "@/components/MealCard";
 import { meals } from "@/data/meals";
 
@@ -11,7 +12,15 @@ export default function MealsPage() {
 
       <div className="mt-5 grid gap-4">
         {meals.map((meal) => (
-          <MealCard key={meal.id} meal={meal} />
+          <Link key={meal.id} href={`/meals/${meal.id}`} className="block">
+            <MealCard
+              imageUrl={meal.image}
+              title={meal.name}
+              summary={meal.description}
+              tag={meal.summary.split("•")[1]?.trim()}
+              footer={`${meal.calories} kcal`}
+            />
+          </Link>
         ))}
       </div>
     </main>
