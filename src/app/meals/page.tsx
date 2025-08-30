@@ -7,7 +7,7 @@ export const dynamic = "force-static";
 export default function MealsPage() {
   return (
     <main className="px-5 pt-6 pb-6 max-w-md mx-auto">
-      <h1 className="text-xl font-semibold">Top Meals</h1>
+      <h1 className="text-2xl font-extrabold tracking-tight font-display">Top Meals</h1>
       <p className="mt-1 text-sm text-black/70">Handpicked favorites for you</p>
 
       <div className="mt-5 grid gap-4">
