@@ -27,7 +27,7 @@ export default function Home() {
   return (
     <main className="px-5 pt-6 pb-6 max-w-md mx-auto">
       {/* Hero Banner */}
-      <section className="relative overflow-hidden rounded-2xl border-2 border-black bg-[var(--soft-yellow)]/80 shadow-[8px_8px_0_0_#111] p-5">
+      <section className="relative overflow-hidden rounded-2xl border-2 border-black bg-[var(--soft-yellow)]/70 shadow-[8px_8px_0_0_#111] p-5">
         <div
           aria-hidden
           className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-[var(--peach)]/50"
