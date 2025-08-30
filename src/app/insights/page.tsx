@@ -1,14 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { insights, weeklyProgress } from "@/data/insights";
-import ScorePieChart from "@/data/nutri-snap-score";
+import ScorePieChart, { ScoreData } from "@/data/nutri-snap-score";
 
 export const dynamic = "force-static";
 
 export default function InsightsPage() {
   // Temporary demo data for Nutri Snap Score distribution
-  type ScoreItem = { score: number; date: { seconds: number; nanoseconds: number } };
   const nowSeconds = Math.floor(Date.now() / 1000);
-  const scoreData: ScoreItem[] = [82, 71, 64, 53, 47, 39, 26, 15, 92, 78, 58, 34].map((score, i) => ({
+  const scoreData: ScoreData[] = [82, 71, 64, 53, 47, 39, 26, 15, 92, 78, 58, 34].map((score, i) => ({
     score,
     date: { seconds: nowSeconds - i * 86400, nanoseconds: 0 },
   }));
@@ -66,7 +65,7 @@ export default function InsightsPage() {
                 </div>
               </div>
               {/* Chart renders only on client */}
-              <ScorePieChart data={scoreData as any} />
+              <ScorePieChart data={scoreData} />
             </div>
           </CardContent>
         </Card>

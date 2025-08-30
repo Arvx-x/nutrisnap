@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react';
 
 // Define the structure of the score data prop, same as the line chart
-interface ScoreData {
+export interface ScoreData {
   score: number;
   date: { seconds: number; nanoseconds: number; };
 }
