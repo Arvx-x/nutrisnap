@@ -11,8 +11,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-rubik);
 }
 
 * {
@@ -24,10 +24,30 @@ body {
   color: var(--foreground);
 }
 
+html {
+  background: var(--background);
+}
+
 .shadow-soft {
   box-shadow: 0 8px 20px rgba(0,0,0,0.06);
 }
 
 .shadow-soft-lg {
   box-shadow: 0 14px 30px rgba(0,0,0,0.08);
+}
+
+.font-display {
+  font-family: var(--font-display), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+/* Comic accents */
+.accent-comic {
+  border: 2px solid #111111;
+  box-shadow: 6px 6px 0 0 #111111;
+}
+
+.tag-comic {
+  border: 2px solid #111111;
+  border-radius: 9999px;
+  box-shadow: 3px 3px 0 0 #111111;
 }
