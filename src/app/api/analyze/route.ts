@@ -29,19 +29,19 @@ export async function POST(req: Request) {
       });
     }
 
-    const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
-    if (!apiKey) {
-      return new Response(JSON.stringify({ error: "Server missing Gemini API key" }), {
+    const primaryKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+    const backupKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY_BACKUP;
+    if (!primaryKey && !backupKey) {
+      return new Response(JSON.stringify({ error: "Server missing Gemini API key(s)" }), {
         status: 500,
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-    const arrayBuffer = await file.arrayBuffer();
+    const imageFile = file as File; // narrowed by guard above
+    const arrayBuffer = await imageFile.arrayBuffer();
     const base64 = arrayBufferToBase64(arrayBuffer);
+    const mimeType = imageFile.type || "image/jpeg";
 
     const prompt = `You are a nutrition analyst. Identify the primary food in the photo and estimate common macros. 
 Respond ONLY with JSON using these keys: 
@@ -55,17 +55,44 @@ Respond ONLY with JSON using these keys:
 }
 Numbers should be approximate per serving shown. No extra text.`;
 
-    const result = await model.generateContent([
-      { text: prompt },
-      {
-        inlineData: {
-          mimeType: file.type || "image/jpeg",
-          data: base64,
-        },
-      },
-    ]);
+    const isQuotaError = (err: unknown) => {
+      const msg = err instanceof Error ? err.message.toLowerCase() : String(err).toLowerCase();
+      return (
+        msg.includes("rate") ||
+        msg.includes("quota") ||
+        msg.includes("exceed") ||
+        msg.includes("429") ||
+        msg.includes("insufficient") ||
+        msg.includes("exhaust")
+      );
+    };
 
-    const text = result.response.text();
+    async function generateWithKey(key: string) {
+      const genAI = new GoogleGenerativeAI(key);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const result = await model.generateContent([
+        { text: prompt },
+        {
+          inlineData: {
+            mimeType,
+            data: base64,
+          },
+        },
+      ]);
+      return result.response.text();
+    }
+
+    let text: string;
+    try {
+      const keyToUse = primaryKey || backupKey!;
+      text = await generateWithKey(keyToUse);
+    } catch (err) {
+      if (backupKey && primaryKey && isQuotaError(err)) {
+        text = await generateWithKey(backupKey);
+      } else {
+        throw err;
+      }
+    }
     let data: Macros | null = null;
     try {
       data = JSON.parse(text) as Macros;
