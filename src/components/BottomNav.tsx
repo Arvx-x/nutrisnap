@@ -11,7 +11,7 @@ type Tab = {
 
 const tabs: Tab[] = [
   { href: "/", label: "Home", icon: "🏠" },
-  { href: "/meals", label: "Top Meals", icon: "🍽️" },
+  { href: "/top-meals", label: "Top Meals", icon: "🍽️" },
   { href: "/insights", label: "Insights", icon: "💡" },
   { href: "/profile", label: "Profile", icon: "👤" },
 ];
