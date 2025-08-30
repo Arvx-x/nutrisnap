@@ -1,10 +1,29 @@
 import Link from "next/link";
-import Image from "next/image";
 import UploadAnalyzer from "@/components/UploadAnalyzer";
 import { meals } from "@/data/meals";
 import SafeImage from "@/components/SafeImage";
 
 export default function Home() {
+  const sampleCalories = 420;
+  const sampleProtein = 38; // grams
+  const sampleCarbs = 36; // grams
+
+  const today = new Date();
+  const dateStr = today.toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+
+  const caloriesPct = Math.max(0, Math.min(100, Math.round((sampleCalories / 900) * 100)));
+  const proteinPct = Math.max(0, Math.min(100, Math.round((sampleProtein / 80) * 100)));
+  const carbsPct = Math.max(0, Math.min(100, Math.round((sampleCarbs / 120) * 100)));
+
+  const caloriesDeg = caloriesPct * 3.6;
+  const proteinDeg = proteinPct * 3.6;
+  const carbsDeg = carbsPct * 3.6;
+
   return (
     <main className="px-5 pt-6 pb-6 max-w-md mx-auto">
       {/* Hero Banner */}
@@ -18,27 +37,64 @@ export default function Home() {
           className="absolute -left-8 bottom-0 h-28 w-28 rounded-full bg-[var(--sage)]/50"
         />
         <div className="relative">
-          <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-white/80 border border-black shadow-[3px_3px_0_0_#111]">
-            <span className="text-xs font-extrabold uppercase tracking-wide">Eat Smart</span>
-            <span className="text-xs">✨</span>
-          </div>
-          <h1 className="mt-3 text-3xl font-extrabold tracking-tighter font-display inline-flex items-center gap-2 whitespace-nowrap">
-            <span className="inline-block bg-[var(--peach)] px-2 pb-1 rounded-md border-2 border-black shadow-[4px_4px_0_0_#111]">Nutri</span>
-            <span className="ml-1 inline-block bg-[var(--sage)] px-2 pb-1 rounded-md border-2 border-black shadow-[4px_4px_0_0_#111]">Scan</span>
-            <Image
-              src="/WhatsApp Image 2025-08-30 at 14.59.47.jpeg"
-              alt="NutriScan badge"
-              width={95}
-              height={95}
-              className="ml-4 align-middle rounded-2xl border-2 border-black shadow-[3px_3px_0_0_#111]"
-            />
+          <h1 className="mt-3 text-3xl font-extrabold tracking-tighter font-display flex items-center gap-2 whitespace-nowrap">
+            <span
+              className="inline-block px-3 py-1 rounded-md border-2 border-black shadow-[4px_4px_0_0_#111] bg-[var(--peach)]"
+            >
+              NutriSnap
+            </span>
           </h1>
-          <p className="mt-2 text-sm text-black/75">Your playful AI guide to smarter meals, insights, and goals.</p>
+          <div className="inline-flex flex-col gap-2 mt-3">
+            <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-white/80 border border-black shadow-[3px_3px_0_0_#111]">
+              <span className="text-xs font-extrabold uppercase tracking-wide">Hey Aarav</span>
+              <span className="text-xs">👋</span>
+            </div>
+            <div className="inline-block text-[11px] font-semibold text-black bg-white/80 px-2 py-0.5 rounded-md border border-black/10">
+              {dateStr}
+            </div>
+          </div>
+          <div className="mt-3 grid grid-cols-3 gap-3">
+            <div className="flex flex-col items-center">
+              <div
+                className="relative h-20 w-20 rounded-full border-2 border-black shadow-[3px_3px_0_0_#111]"
+                style={{ background: `conic-gradient(color-mix(in srgb, var(--soft-yellow), black 12%) ${caloriesDeg}deg, #f3f4f6 ${caloriesDeg}deg 360deg)` }}
+                aria-label="Calories progress"
+              >
+                <div className="absolute inset-[8px] rounded-full bg-white grid place-items-center text-[17px] font-extrabold">
+                  {sampleCalories}
+                  <span className="text-[14px] font-semibold"> kcal</span>
+                </div>
+              </div>
+              <span className="mt-1 text-[11px] font-bold uppercase tracking-wide">Calories</span>
+            </div>
 
-          <div className="mt-3 flex gap-2">
-            <span className="tag-comic bg-[var(--soft-yellow)] px-2 py-1 text-[11px] font-bold">AI Powered</span>
-            <span className="tag-comic bg-[var(--sage)]/60 px-2 py-1 text-[11px] font-bold">Instant Insights</span>
-            <span className="tag-comic bg-[var(--peach)]/60 px-2 py-1 text-[11px] font-bold">Mobile First</span>
+            <div className="flex flex-col items-center">
+              <div
+                className="relative h-20 w-20 rounded-full border-2 border-black shadow-[3px_3px_0_0_#111]"
+                style={{ background: `conic-gradient(color-mix(in srgb, var(--sage), black 12%) ${proteinDeg}deg, #f3f4f6 ${proteinDeg}deg 360deg)` }}
+                aria-label="Protein progress"
+              >
+                <div className="absolute inset-[8px] rounded-full bg-white grid place-items-center text-[17px] font-extrabold text-[#1f3b2f]">
+                  {sampleProtein}
+                  <span className="text-[14px] font-semibold"> g</span>
+                </div>
+              </div>
+              <span className="mt-1 text-[11px] font-bold uppercase tracking-wide">Protein</span>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <div
+                className="relative h-20 w-20 rounded-full border-2 border-black shadow-[3px_3px_0_0_#111]"
+                style={{ background: `conic-gradient(color-mix(in srgb, var(--peach), black 12%) ${carbsDeg}deg, #f3f4f6 ${carbsDeg}deg 360deg)` }}
+                aria-label="Carbs progress"
+              >
+                <div className="absolute inset-[8px] rounded-full bg-white grid place-items-center text-[17px] font-extrabold">
+                  {sampleCarbs}
+                  <span className="text-[14px] font-semibold"> g</span>
+                </div>
+              </div>
+              <span className="mt-1 text-[11px] font-bold uppercase tracking-wide">Carbs</span>
+            </div>
           </div>
 
           <div className="mt-4 grid grid-cols-2 gap-2">
