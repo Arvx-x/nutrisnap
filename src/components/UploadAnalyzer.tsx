@@ -6,12 +6,24 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export default function UploadAnalyzer() {
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
   const [showResult, setShowResult] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [macros, setMacros] = React.useState<{
+    name?: string;
+    calories?: number;
+    protein_g?: number;
+    carbs_g?: number;
+    fats_g?: number;
+    sugar_g?: number;
+  } | null>(null);
+  const fileRef = React.useRef<File | null>(null);
 
   function handleFile(file?: File) {
     if (!file) return;
     const url = URL.createObjectURL(file);
     setPreviewUrl(url);
     setShowResult(false);
+    setMacros(null);
+    fileRef.current = file;
   }
 
   return (
@@ -44,10 +56,30 @@ export default function UploadAnalyzer() {
                 </label>
                 <button
                   type="button"
-                  className="rounded-2xl px-4 py-3 text-sm font-semibold bg-[var(--sage)] text-[#1f3b2f] shadow-soft active:scale-[0.99]"
-                  onClick={() => setShowResult(true)}
+                  className="rounded-2xl px-4 py-3 text-sm font-semibold bg-[var(--sage)] text-[#1f3b2f] shadow-soft active:scale-[0.99] disabled:opacity-60"
+                  disabled={loading}
+                  onClick={async () => {
+                    if (!fileRef.current) return;
+                    try {
+                      setLoading(true);
+                      const form = new FormData();
+                      form.append("file", fileRef.current);
+                      const res = await fetch("/api/analyze", { method: "POST", body: form });
+                      const json = await res.json();
+                      setMacros(json.result ?? null);
+                      setShowResult(true);
+                      // Clear preview after analysis completes
+                      URL.revokeObjectURL(previewUrl);
+                      setPreviewUrl(null);
+                      fileRef.current = null;
+                    } catch (_) {
+                      setShowResult(false);
+                    } finally {
+                      setLoading(false);
+                    }
+                  }}
                 >
-                  Analyze with AI
+                  {loading ? "Analyzing..." : "Analyze with AI"}
                 </button>
               </div>
             </div>
@@ -91,27 +123,35 @@ export default function UploadAnalyzer() {
             <CardTitle>Estimated Nutrition</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-3 gap-3 text-center">
-              <div className="rounded-xl bg-[var(--soft-yellow)] p-3">
-                <div className="text-xs text-black/60">Calories</div>
-                <div className="mt-1 text-sm font-semibold">~450 kcal</div>
-              </div>
-              <div className="rounded-xl bg-[var(--sage)]/50 p-3">
-                <div className="text-xs text-black/60">Protein</div>
-                <div className="mt-1 text-sm font-semibold">~25 g</div>
-              </div>
-              <div className="rounded-xl bg-[var(--peach)]/50 p-3">
-                <div className="text-xs text-black/60">Carbs</div>
-                <div className="mt-1 text-sm font-semibold">~50 g</div>
-              </div>
-            </div>
-            <div className="mt-3 text-[11px] text-black/60">
-              This is a demo. AI analysis will be more precise with server integration.
+            {macros?.name && (
+              <div className="mb-2 text-sm text-black/80">Detected: <span className="font-semibold">{macros.name}</span></div>
+            )}
+            <div className="space-y-3">
+              <MacroBar label="Calories" value={macros?.calories} unit="kcal" color="bg-[var(--soft-yellow)]" max={900} />
+              <MacroBar label="Protein" value={macros?.protein_g} unit="g" color="bg-[var(--sage)]" max={80} />
+              <MacroBar label="Carbs" value={macros?.carbs_g} unit="g" color="bg-[var(--peach)]" max={120} />
+              <MacroBar label="Fats" value={macros?.fats_g} unit="g" color="bg-black/10" max={80} />
+              <MacroBar label="Sugar" value={macros?.sugar_g} unit="g" color="bg-black/20" max={80} />
             </div>
           </CardContent>
         </Card>
       )}
     </section>
+  );
+}
+
+function MacroBar({ label, value, unit, color, max = 100 }: { label: string; value?: number; unit: string; color: string; max?: number }) {
+  const pct = Math.max(0, Math.min(100, value ? Math.round((value / max) * 100) : 0));
+  return (
+    <div>
+      <div className="flex items-center justify-between text-xs text-black/70 mb-1">
+        <span>{label}</span>
+        <span className="font-medium">{value ?? "~"} {unit}</span>
+      </div>
+      <div className="h-3 w-full rounded-full bg-black/10 overflow-hidden border border-black/10">
+        <div className={`h-full ${color}`} style={{ width: `${pct}%` }} />
+      </div>
+    </div>
   );
 }
 
