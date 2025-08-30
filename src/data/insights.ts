@@ -11,6 +11,10 @@ export const insights = [
     id: "fiber",
     text: "Fiber intake improved by 12% over last week",
   },
+  {
+    id: "menstruation-iron",
+    text: "During menstruation, include iron-rich foods like spinach, lentils, and jaggery for better energy levels",
+  },
 ];
 
 export const weeklyProgress = 68; // percentage
