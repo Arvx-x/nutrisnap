@@ -1,16 +1,16 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { use } from "react";
 import { meals } from "@/data/meals";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-type Props = { params: { id: string } };
 
 export async function generateStaticParams() {
   return meals.map((m) => ({ id: m.id }));
 }
 
-export default function MealDetailsPage({ params }: Props) {
-  const meal = meals.find((m) => m.id === params.id);
+export default function MealDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const meal = meals.find((m) => m.id === id);
   if (!meal) return notFound();
 
   return (
