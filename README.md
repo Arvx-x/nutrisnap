@@ -54,4 +54,6 @@ Make nutrition tracking easy, personalized, and engaging.
 ### 3.6 Authentication and Profile 🔐
 - Robust custom user authentication system.  
 - Profile building tailored to the user in the "Profile" tab in the navigation bar.  
-- Ensures data privacy and secure user sessions.  
+- Ensures data privacy and secure user sessions.
+- "Complete profile" button to customize the app to user's need and create a profile.
+- Sign out button for singing out and using the app as a guest.
